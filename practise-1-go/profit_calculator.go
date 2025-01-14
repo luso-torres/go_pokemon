@@ -29,21 +29,18 @@ Assumptions:
 
 func main() {
 	var revenue, expenses, taxRate, earningsBeforeTax, earningsAfterTax, ratio float64
-	revenue, expenses, taxRate = requestValues()
-
+	revenue = requestValues("Revenue: ")
+	expenses = requestValues("Tax rate: ")
+	taxRate = requestValues("Expenses: ")
 	earningsBeforeTax, earningsAfterTax, ratio = calculateProfit(revenue, expenses, taxRate)
 
 	showValues(earningsBeforeTax, earningsAfterTax, ratio)
 }
 
-func requestValues() (revenue float64, taxRate float64, expenses float64) {
-	fmt.Print("Revenue: ")
-	fmt.Scan(&revenue)
-	fmt.Print("Tax rate: ")
-	fmt.Scan(&taxRate)
-	fmt.Print("Expenses: ")
-	fmt.Scan(&expenses)
-	return revenue, taxRate, expenses
+func requestValues(infoText string) (userInput float64) {
+	fmt.Print(infoText)
+	fmt.Scan(&userInput)
+	return userInput
 }
 
 func calculateProfit(revenue float64, taxRate float64, expenses float64) (EBT float64, profit float64, ratio float64) {
