@@ -1,0 +1,3 @@
+The values for EBT: 60.0
+profit: 58.0 %
+ And ratio: 1.0 

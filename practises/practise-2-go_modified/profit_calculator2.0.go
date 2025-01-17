@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 )
@@ -61,35 +62,44 @@ const getFinanceFile = "finance.txt"
 // 	return input2, err
 // }
 
-func writeFinanceToFile(finance [3]float64) {
-	financeText := fmt.Sprint(finance)
+func writeFinanceToFile(finance *[3]float64) {
+	financeText := fmt.Sprintf("The values for EBT: %.1f\nprofit: %.1f \n And ratio: %.1f %%", finance[0], finance[1], finance[2])
 	os.WriteFile(getFinanceFile, []byte(financeText), 0644)
 }
 
 func main() {
 	var revenue, expenses, taxRate, earningsBeforeTax, earningsAfterTax, ratio float64
-	revenue = requestValues("Revenue: ")
-	expenses = requestValues("Tax rate: ")
-	taxRate = requestValues("Expenses: ")
+	revenue, err := requestValues("Revenue: ")
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	expenses, err = requestValues("Tax rate: ")
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	taxRate, err = requestValues("Expenses: ")
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
 	earningsBeforeTax, earningsAfterTax, ratio = calculateProfit(revenue, expenses, taxRate)
 
 	showValues(earningsBeforeTax, earningsAfterTax, ratio)
-	writeFinanceToFile([3]float64{earningsBeforeTax, earningsAfterTax, ratio})
+	finance := [3]float64{earningsBeforeTax, earningsAfterTax, ratio}
+	writeFinanceToFile(&finance)
 }
 
-func requestValues(infoText string) (userInput float64) {
-	c := true
+func requestValues(infoText string) (float64, error) {
 	fmt.Print(infoText)
-	for c {
-		fmt.Scan(&userInput)
-		if userInput < 0 || userInput == 0 {
-			fmt.Print("Invalid Input. The input must be greater than zero.\n Try again:")
-		} else {
-			c = false
-			return // this should end the for loop
-		}
+	var userInput float64
+	fmt.Scan(&userInput)
+	if userInput <= 0 {
+		return 0, errors.New("Invalid Input. The value must be greater than zero.")
 	}
-	return userInput
+	fmt.Println("The output will be the user input %f", userInput)
+	return userInput, nil
 }
 
 func calculateProfit(revenue float64, taxRate float64, expenses float64) (EBT float64, profit float64, ratio float64) {
