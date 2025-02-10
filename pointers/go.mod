@@ -1,3 +1,3 @@
-module mod
+module example.com/pointers
 
 go 1.23.4
