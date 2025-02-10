@@ -6,12 +6,13 @@ import (
 
 func main() {
 	age := 32 //regular variable
-	fmt.Println("Age: ", age)
-	var adultYears int = getAdultYears(age)
-	fmt.Println(adultYears)
+	agePointer := &age
+	fmt.Println("Age: ", *agePointer) //add an astherisc to deaddress a pointer.
+	editAgeToAdultYears(agePointer)
+	fmt.Println(age)
 }
 
-func getAdultYears(age int) int {
-	return age - 18
-
+func editAgeToAdultYears(age *int) {
+	//return *age - 18
+	*age = *age - 18
 }
